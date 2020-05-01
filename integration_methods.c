@@ -116,4 +116,22 @@
         double vtemp[]={0,0,0} ; 
         printf("a0=%f a1=%f a2=%f \n",a[0],a[1],a[2]);
         eo =energies(r,V);
+                FILE *kk;
+        kk=fopen("energy5.txt","w");
+        t=0.0 ;   
+       // function_arr is an array of function pointers 
+        void (*function_arr[])(double *,double *,double *,double *) = {euler,leapfrog,rungekutta}; 
+        printf("enter choice : (0,1,2) \n"); 
+        scanf("%d", &choice); 
+
+        while ( t <= tend ){   // ( t <= tmax/dt )
+        
+        (*function_arr[choice])(&r,&V,a,vtemp); 
+
+        fprintf(kk,"%f %f %f %f %f \n",t,r[0],r[1],r[2],(eo-energies(r,V))/eo);
+        t +=dt;
+        }
+        fclose(kk);
+        
+        return 0;      
     }

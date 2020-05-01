@@ -22,7 +22,7 @@
     a[i] = -r[i]/r3;
     return;
     } */
-    void euler(double r[3],double V[3], double a[3]){
+    void euler(double r[3],double V[3], double a[3],double vtemp[3]){
          double eo =energies(r,V);
          double dt;
          double norm(double r[]);
@@ -42,30 +42,32 @@
         return;
     }
 
-    void leapfrog(double r[3],double V[3], double a[3],double vtemp[3]) { 
+    void leapfrog(double *r[3],double *V[3], double a[3],double vtemp[3]) { 
         double dt,r2,r3;
-        double eo =energies(r,V);
-       //accelaration(r,a);
-        r2 =r[0]*r[0]+r[1]*r[1]+r[2]*r[2];
+        double eo =energies(&r,&V);
+        r2 =*r[0]* *r[0]+*r[1]* *r[1]+*r[2]* *r[2];
         r3=r2*sqrt(r2);
-        a[0] =-r[0]/r3;
-        a[1] =-r[1]/r3;
-        a[2] =-r[2]/r3;       
-        vtemp[0] = V[0]+a[0]*dt*0.5;
-        vtemp[1] = V[1]+a[1]*dt*0.5;
-        vtemp[2] = V[2]+a[2]*dt*0.5;
+        //accelaration(r,a);
+        a[0] =-*r[0]/r3;
+        a[1] =-*r[1]/r3;
+        a[2] =-*r[2]/r3; 
+              
+        vtemp[0] = *V[0]+a[0]*dt*0.5;
+        vtemp[1] = *V[1]+a[1]*dt*0.5;
+        vtemp[2] = *V[2]+a[2]*dt*0.5;
 
-        r[0] += vtemp[0]*dt;
-        r[1] += vtemp[1]*dt;
-        r[2] += vtemp[2]*dt;
+        *r[0] += vtemp[0]*dt;
+        *r[1] += vtemp[1]*dt;
+        *r[2] += vtemp[2]*dt;
 
         //accelaration(r,a);
-        a[0] =-r[0]/r3;
-        a[1] =-r[1]/r3;
-        a[2] =-r[2]/r3; 
-        V[0] = vtemp[0]+a[0]*dt*0.5;
-        V[1] = vtemp[1]+a[1]*dt*0.5;
-        V[2] = vtemp[2]+a[2]*dt*0.5;
+        a[0] =-*r[0]/r3;
+        a[1] =-*r[1]/r3;
+        a[2] =-*r[2]/r3; 
+        *V[0] = vtemp[0]+a[0]*dt*0.5;
+        *V[1] = vtemp[1]+a[1]*dt*0.5;
+        *V[2] = vtemp[2]+a[2]*dt*0.5;
+         printf(" %2.5e %2.5e %2.5e %2.5e \n ",r[0],r[1],r[2],(eo-energies(r,V))/eo);
         return;
     }   
     //4th degree Runge Kutta
@@ -98,12 +100,15 @@
         V[0] = vtemp[0]+a[0]*dt*0.5;
         V[1] = vtemp[1]+a[1]*dt*0.5;
         V[2] = vtemp[2]+a[2]*dt*0.5;
+         printf(" %2.5e %2.5e %2.5e %2.5e \n ",r[0],r[1],r[2],(eo-energies(r,V))/eo);
         return ;
     }     
     int main(int argc, char **argv) {
         double norm_r,r_denom,V2,rx,ry,rz,Vx,Vy,Vz,r2,r3;
         double t,dt=0.01,ek,epot,cons,eo;
         int tend=100;
+        unsigned int choice;
+
         printf("( Enter components of (rx,ry,rz) : \n");
         scanf("%lf %lf %lf",&rx,&ry,&rz);
         printf("( Enter components of (Vx,Vy,Vz) : \n");
@@ -114,9 +119,11 @@
         double V[]= {Vx,Vy,Vz};  
         double a[]={0,0,0}; 
         double vtemp[]={0,0,0} ; 
-        printf("a0=%f a1=%f a2=%f \n",a[0],a[1],a[2]);
+
         eo =energies(r,V);
-                FILE *kk;
+
+
+        FILE *kk;
         kk=fopen("energy5.txt","w");
         t=0.0 ;   
        // function_arr is an array of function pointers 
@@ -132,6 +139,5 @@
         t +=dt;
         }
         fclose(kk);
-        
-        return 0;      
-    }
+        return 0; 
+        }

@@ -10,7 +10,7 @@
    double t=2448893.500000000 ;  
    double k3=0.01720209895,k2 ;
 
-   k2=k3*k3; // 1 alınırsa yörünge elemanlarının hatası çok büyük geliyor ?
+   k2=k3*k3; 
 
     printf(" r_vec[0] = %e \n",r_vec[0]);
    norm_r = sqrt(r_vec[0]* r_vec[0] + r_vec[1] * r_vec[1] + r_vec[2] * r_vec[2]);

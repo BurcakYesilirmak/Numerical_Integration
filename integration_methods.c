@@ -113,6 +113,27 @@ void position_velocity(double r_vec[3],double v_vec[3],double EC, double A, doub
     }
   }
 
+   void ephemeris(double r_vec[3], double r_earth[3], double geocentric_pos_body[3],double *alpha , double *delta){
+     double norm_R, l, m, o;
+     int p =0;
+
+    for(p=0;p<3;p++) { 
+   geocentric_pos_body[p]=r_vec[p]-r_earth[p];
+   }
+   norm_R = sqrt(pow(geocentric_pos_body[0],2) + pow(geocentric_pos_body[1],2)+ pow(geocentric_pos_body[2],2));
+   l = geocentric_pos_body[0]/norm_R;
+   m = geocentric_pos_body[1]/norm_R;
+   o = geocentric_pos_body[2]/norm_R;
+   *delta = asin(o)*180/M_PI;
+   // Right ascension:
+   if (m >0)
+    *alpha = acos(l/cos(*delta))*180/M_PI;
+   else ;
+    *alpha = 360 - acos(l/cos(*delta))*180/M_PI;
+   printf(" Right ascension = %4.2f [deg] \n",*alpha);
+   printf(" Declination = %4.2f [deg] \n" ,*delta);
+ }
+
  double norm(double r[3]) {   
         double norm_r = sqrt(r[0]*r[0]+r[1]*r[1]+r[2]*r[2]);
         return (norm_r);
